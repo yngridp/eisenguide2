@@ -1,6 +1,6 @@
 package com.eisenguide2.controller;
 
-import java.util.HashMap;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eisenguide2.dto.TaskRequest;
@@ -28,6 +27,7 @@ import com.eisenguide2.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -63,51 +63,41 @@ public class TaskController {
     public List<Task> getTasksByObjective(@PathVariable String objective) {
         return taskService.getTasksByObjective(objective);
     }
-
     @PostMapping
-    @Operation(summary="Criar tarefa", description ="Método para criar uma tarefa")
-    public ResponseEntity<Map<String, Object>> createTask(@RequestBody TaskRequest taskRequest) {
-        // Verifica se o ID do usuário foi enviado na requisição
-        if (taskRequest.getUserId() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                 .body(Map.of("message", "O ID do usuário é obrigatório."));
-        }
-
-        // Recupera o usuário com base no ID
-        Optional<User> userOptional = userService.findById(taskRequest.getUserId());
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body(Map.of("message", "Usuário não encontrado."));
-        }
-        
-        User user = userOptional.get();
-
-        // Cria uma nova tarefa e associa o usuário
+    @Operation(summary = "Criar tarefa", description = "Cria uma tarefa e associa ao usuário logado.")
+    public ResponseEntity<?> createTask(@Valid @RequestBody TaskRequest taskRequest, Principal principal) {
+        // Cria a tarefa com os dados recebidos
         Task task = new Task();
         task.setTitle(taskRequest.getTitle());
         task.setDescription(taskRequest.getDescription());
+        task.setObjective(taskRequest.getObjective());
+        task.setCompleted(false);
 
-        // Verifica se a categoria é válida antes de definir
-        TaskCategory category;
+        // Valida a categoria recebida e associa à tarefa
         try {
-            category = TaskCategory.valueOf(taskRequest.getCategory()); // Converte String para Enum
-            task.setCategory(category); // Define a categoria da tarefa
+            TaskCategory category = TaskCategory.valueOf(taskRequest.getCategory());
+            task.setCategory(category);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", "Categoria inválida."));
         }
 
-        task.setUser(user);
+        // Verifica se o usuário está logado (via Principal)
+        if (principal != null) {
+            // Obtém o nome do usuário logado
+            String username = principal.getName();
 
-        // Salva a tarefa
+            // Busca o usuário no banco de dados
+            Optional<User> userOptional = userService.findByUsername(username);
+            if (userOptional.isPresent()) {
+                task.setUser(userOptional.get());  // Associa o usuário à tarefa
+            }
+        }
+
+        // Salva a tarefa no banco de dados
         Task createdTask = taskService.save(task);
-        
-        // Prepara a resposta com os dados da tarefa e do usuário
-        Map<String, Object> response = new HashMap<>();
-        response.put("task", createdTask);
-        response.put("user", user);
-        response.put("actionMessage", createdTask.getActionMessage());
-        
-        return ResponseEntity.status(201).body(response);
+
+        // Retorna a resposta com a tarefa criada
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
     @PutMapping("/{id}")
@@ -119,7 +109,6 @@ public class TaskController {
         }
         task.setTitle(updatedTask.getTitle());
         task.setDescription(updatedTask.getDescription());
-        task.setDueDate(updatedTask.getDueDate());
         task.setObjective(updatedTask.getObjective());
         task.setCategory(updatedTask.getCategory());
         task.setCompleted(updatedTask.isCompleted());

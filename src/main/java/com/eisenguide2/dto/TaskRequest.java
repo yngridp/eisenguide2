@@ -1,12 +1,14 @@
 package com.eisenguide2.dto;
 
+import java.time.LocalDate;
+
 public class TaskRequest {
-
-	private String title;
+    private String title;
     private String description;
-    private String category; // Mantém como String
-    private Long userId;
+    private String category;
+    private String objective;
 
+    // Getters e Setters
     public String getTitle() {
         return title;
     }
@@ -24,18 +26,18 @@ public class TaskRequest {
     }
 
     public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public Long getUserId() {
-        return userId;
+        return category;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getObjective() {
+        return objective;
+    }
+
+    public void setObjective(String objective) {
+        this.objective = objective;
     }
 }

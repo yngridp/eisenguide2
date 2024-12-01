@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.eisenguide2.model.Task;
 import com.eisenguide2.model.User;
 import com.eisenguide2.repository.UserRepository;
 
@@ -46,8 +47,9 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-
-	public static User findByEmail(String email) {
-		return null;
+    
+	public Optional<User> findByEmail(String email) {
+	    return userRepository.findByEmail(email);
 	}
+
 }

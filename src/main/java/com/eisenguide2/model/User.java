@@ -27,8 +27,8 @@ public class User {
     @NotBlank(message = "O nome é obrigatório")
     private String username;
 
-    @NotBlank(message = "A senha é orbigatória")
-    @Size(min = 6, message = "A senha precisa ter no minímo 6 caracteres")
+    @NotBlank(message = "A senha é obrigatória")
+    @Size(min = 6, message = "A senha precisa ter no mínimo 6 caracteres")
     private String password;
 
     @Schema(example = "email@email.com.br")
@@ -40,64 +40,64 @@ public class User {
     private String phone;
 
     private String photo;
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
-	@JsonIgnoreProperties("user")
-	private List<Task> task;
+    @JsonIgnoreProperties("user")  // Impede o ciclo de serialização entre User e Task
+    private List<Task> tasks;  // Nome corrigido para 'tasks'
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public String getPhoto() {
-		return photo;
-	}
+    public String getPhoto() {
+        return photo;
+    }
 
-	public void setPhoto(String photo) {
-		this.photo = photo;
-	}
-	public List<Task> getTask() {
-		return this.task;
-	}
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
-	public void setPostagem(List<Task> task) {
-		this.task = task;
-	}
-    
+    public List<Task> getTasks() {
+        return tasks;  // Getter corrigido
+    }
+
+    public void setTasks(List<Task> tasks) {  // Setter corrigido
+        this.tasks = tasks;
+    }
 }

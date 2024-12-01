@@ -16,5 +16,3 @@ public enum TaskCategory {
         return displayName;
     }
 }
-
-

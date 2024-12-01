@@ -3,10 +3,10 @@ package com.eisenguide2.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.eisenguide2.model.Task;
+import com.eisenguide2.model.User;
 import com.eisenguide2.repository.TaskRepository;
 
 import lombok.AllArgsConstructor;
@@ -39,4 +39,8 @@ public class TaskService {
 	    public List<Task> searchTasks(String title) {
 	        return taskRepository.findAllByTitleContainingIgnoreCase(title);
 	    }
+	    public List<Task> findByUser(User user) {
+	        return taskRepository.findByUser(user);
+	    }
+
 }

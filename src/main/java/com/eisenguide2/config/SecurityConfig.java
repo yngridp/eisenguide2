@@ -25,10 +25,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                	.requestMatchers("/users/login","/users/register","/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**").permitAll()
-                    .anyRequest().permitAll())  // Permite todas as requisições sem autenticação
+                	.requestMatchers("/users/login","/users/register","/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/users/update-password").permitAll()
+                    .anyRequest().permitAll()) 
                 .sessionManagement(session -> 
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Sem estado, sem sessões
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
                 .build();
     }
 

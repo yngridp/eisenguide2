@@ -13,7 +13,7 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:5173"); // URL do frontend
+        config.addAllowedOrigin("https://eisenguide.vercel.app/");
         config.addAllowedHeader("*"); 
         config.addAllowedMethod("*"); 
 

@@ -17,7 +17,7 @@ public class Eisenguide2Application {
 	
 	@GetMapping("/")
     public ResponseEntity<Void> redirectToSwaggerUi() {
-        // Redireciona diretamente para o Swagger UI
+        
         return ResponseEntity.status(HttpStatus.FOUND)
                              .location(URI.create("/swagger-ui/index.html"))
                              .build();

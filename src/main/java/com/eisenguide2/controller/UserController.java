@@ -80,9 +80,16 @@ public class UserController {
             return ResponseEntity.badRequest().build(); // Retorna 400 Bad Request
         }
 
-        Optional<User> user = userService.findByEmail(email);  // Altere para buscar pelo email
+        Optional<User> user = userService.findByEmail(email);  
         if (user.isPresent()) {
-            userService.updatePassword(user.get().getId(), newPassword);  // Atualiza a senha usando o ID do usuário
+            User currentUser = user.get();
+            
+            if (userService.checkPassword(newPassword, currentUser.getPassword())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Senha não pode ser a mesma
+            }
+
+            // Atualiza a senha usando o ID do usuário
+            userService.updatePassword(currentUser.getId(), newPassword);
             return ResponseEntity.noContent().build(); // Retorna 204 No Content
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Retorna 404 se o usuário não for encontrado

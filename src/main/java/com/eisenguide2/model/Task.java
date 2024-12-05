@@ -52,7 +52,7 @@ public class Task {
     private User user; 
     
     @Enumerated(EnumType.STRING)
-    private TaskCategory category; // Supondo que você tenha uma enumeração ou classe TaskCategory
+    private TaskCategory category; 
     
     private boolean completed;
 	

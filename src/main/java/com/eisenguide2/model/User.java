@@ -42,8 +42,8 @@ public class User {
     private String photo;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
-    @JsonIgnoreProperties("user")  // Impede o ciclo de serialização entre User e Task
-    private List<Task> tasks;  // Nome corrigido para 'tasks'
+    @JsonIgnoreProperties("user")  
+    private List<Task> tasks;  
 
     public Long getId() {
         return id;
@@ -94,10 +94,10 @@ public class User {
     }
 
     public List<Task> getTasks() {
-        return tasks;  // Getter corrigido
+        return tasks;  
     }
 
-    public void setTasks(List<Task> tasks) {  // Setter corrigido
+    public void setTasks(List<Task> tasks) {  
         this.tasks = tasks;
     }
 }
